@@ -7,9 +7,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CarouselComponent implements OnInit {
 
-  constructor() { }
+  constructor() {
+    //console.log(1, jQuery('.carousel'));
+  }
 
   ngOnInit() {
+  }
+
+  carouselLeft() {
   }
 
 }
