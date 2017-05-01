@@ -11,5 +11,6 @@ import { DropDownDirective } from './dropdown.directive';
 		CommonModule,
 		DropDownDirective
 	]
+	/*NEVER provide services on shared modules*/
 })
 export class SharedModule {}
