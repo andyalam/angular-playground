@@ -1,4 +1,10 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  async,
+  ComponentFixture,
+  TestBed,
+  fakeAsync,
+  tick
+} from '@angular/core/testing';
 
 import { UserComponent } from './user.component';
 import { UserService } from './user.service';
@@ -16,7 +22,7 @@ describe('UserComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(UserComponent);
-    component = fixture.componentInstance;
+    component = fixture.debugElement.componentInstance;
     fixture.detectChanges();
   });
 
@@ -41,7 +47,7 @@ describe('UserComponent', () => {
     expect(compiled.querySelector('p').textContent).not.toContain(component.user.name);
   });
 
-  // not an actual test of the app, just showing how the test bed works w/ async
+  // not an actual test of the component, just showing how the test bed works w/ async
   it('should\'t fetch data successfully if not called asynchronously', () => {
     const dataService = fixture.debugElement.injector.get(DataService);
     const spy = spyOn(dataService, 'getDetails')
@@ -54,11 +60,24 @@ describe('UserComponent', () => {
     const dataService = fixture.debugElement.injector.get(DataService);
     const spy = spyOn(dataService, 'getDetails')
         .and.returnValue(Promise.resolve('Data'));
-    fixture.detectChanges()
+    fixture.detectChanges();
     // whenStable allows us to react when all async tasks are completed
     fixture.whenStable().then(() => {
       expect(component.data).toBe('Data');
     });
+  }));
+
+  it('should fetch data successfully if called asynchronously', fakeAsync(() => {
+    let fixture = TestBed.createComponent(UserComponent);
+    let component = fixture.componentInstance;
+    fixture.detectChanges();
+    const dataService = fixture.debugElement.injector.get(DataService);
+    const spy = spyOn(dataService, 'getDetails')
+        .and.returnValue(Promise.resolve('Data'));
+    fixture.detectChanges();
+    // tick allows us to react when all async tasks are completed - not working without 1500 ?
+    tick(1500);
+    expect(component.data).toBe('Data');
   }));
 
 });
